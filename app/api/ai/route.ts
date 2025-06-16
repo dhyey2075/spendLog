@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ jsonResult, data }, { status: 200 });
     } catch (error) {
         console.error("Error generating AI response:", error);
-        return NextResponse.json({ error: "Failed to generate AI response" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to generate AI response" + error }, { status: 500 });
     }
 
 }
