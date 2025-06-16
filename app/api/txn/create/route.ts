@@ -11,7 +11,9 @@ export async function POST(req: NextRequest) {
         const { amount, description, method, category, to, merchant, userIdBody } = body;
         if (!userId && !userIdBody) return new Response("Unauthorized", { status: 401 });
 
-        userIdBody && (userId = userIdBody); // Use userIdBody if provided
+        if (userIdBody) {
+            userId = userIdBody;
+        }
 
         await dbConnect();
 
