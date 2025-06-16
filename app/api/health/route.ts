@@ -1,7 +1,7 @@
 import { dbConnect } from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         await dbConnect();
         return NextResponse.json({ status: "ok", timestamp: new Date().toISOString() }, { status: 200 });

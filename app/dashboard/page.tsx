@@ -95,7 +95,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-              <YourTxn balance={balance} setBalance={setBalance} setCreateTxn={setCreateTxn} />
+              <YourTxn setBalance={setBalance} setCreateTxn={setCreateTxn} />
             </div>
           )}
         </main>

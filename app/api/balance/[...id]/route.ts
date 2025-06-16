@@ -3,9 +3,6 @@ import { dbConnect } from "@/lib/db";
 import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
 
-interface IParams {
-    amount: string;
-}
 
 export async function GET(req: NextRequest) {
     const { userId } = await auth();

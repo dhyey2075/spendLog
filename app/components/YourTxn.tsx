@@ -10,7 +10,7 @@ interface YourTxnProps {
     setCreateTxn?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const YourTxn: React.FC<YourTxnProps> = ({ balance, setBalance, setCreateTxn }) => {
+const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn }) => {
   const { user, isLoaded } = useUser();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [transactions, setTransactions] = React.useState<ITransaction[] | []>([]);
