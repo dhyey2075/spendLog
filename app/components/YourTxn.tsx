@@ -6,11 +6,12 @@ import { Trash2 } from 'lucide-react';
 
 interface YourTxnProps {
     balance?: number | null;
+    refresh?: boolean;
     setBalance: React.Dispatch<React.SetStateAction<number | null>>;
     setCreateTxn?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn }) => {
+const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) => {
   const { user, isLoaded } = useUser();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [transactions, setTransactions] = React.useState<ITransaction[] | []>([]);
@@ -50,7 +51,7 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn }) => {
     if(isLoaded && user) {
       fetchTransactions();
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, refresh]);
 
   const getTransactionStatusColor = (amount: number) => {
     return amount < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400';

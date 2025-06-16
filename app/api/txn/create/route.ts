@@ -6,13 +6,15 @@ import User from "@/models/User";
 
 export async function POST(req: NextRequest) {
     try {
-        const { userId } = await auth();
-        if (!userId) return new Response("Unauthorized", { status: 401 });
+        let { userId } = await auth();
+        const body = await req.json();
+        const { amount, description, method, category, to, merchant, userIdBody } = body;
+        if (!userId && !userIdBody) return new Response("Unauthorized", { status: 401 });
+
+        userIdBody && (userId = userIdBody); // Use userIdBody if provided
 
         await dbConnect();
 
-        const body = await req.json();
-        const { amount, description, method, category, to, merchant } = body;
 
         // Validate input
         if (typeof amount !== "number" || typeof description !== "string") {

@@ -5,11 +5,15 @@ import { useRouter } from "next/navigation";
 import TxnForm from "../components/TxnForm";
 import YourTxn from "../components/YourTxn";
 import Balance from "../components/Balance";
+import { Stars } from "lucide-react";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const { user, isSignedIn, isLoaded } = useUser();
   const [createTxn, setCreateTxn] = React.useState(false);
   const [balance, setBalance] = React.useState<number | null>(null);
+  const [message, setMessage] = React.useState<string>("");
+  const [refresh, setRefresh] = React.useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +34,7 @@ const Dashboard = () => {
           console.error("Error syncing user:", err.message);
         });
     }
+   
   }, [isSignedIn]);
 
   if (!isLoaded) {
@@ -39,6 +44,7 @@ const Dashboard = () => {
       </div>
     );
   }
+
 
 
 
@@ -86,6 +92,39 @@ const Dashboard = () => {
             </button>
           </div>
 
+          <div className="flex items-center space-x-2">
+            <input type="text" 
+              placeholder="Use AI to generate a transaction..." 
+              className="w-full max-w-md px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              onChange={(e) => setMessage(e.target.value)} 
+              value={message}
+            />
+            <div className="mb-4 p-2 rounded-sm bg-gradient-to-r from-pink-500 to-purple-500"
+              onClick={async() => {
+                if (message.trim()) {
+                  const response = await fetch("/api/ai", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ prompt: message, userId: user?.id }),
+                  })
+                  const data = await response.json();
+                  if(response.status === 200) {
+                    setMessage("");
+                    toast.success("Transaction created successfully by AI!");
+                    setRefresh(!refresh);
+                  }
+                  else {
+                    toast.error(data.error || "Failed to create transaction");
+                  }
+                }
+              }}
+            >
+              <Stars />
+            </div>
+          </div>
+
           {createTxn ? (
             <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -95,7 +134,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-              <YourTxn setBalance={setBalance} setCreateTxn={setCreateTxn} />
+              <YourTxn setBalance={setBalance} setCreateTxn={setCreateTxn} refresh={refresh} />
             </div>
           )}
         </main>
