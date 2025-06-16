@@ -4,7 +4,6 @@ import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import TxnForm from "../components/TxnForm";
 import YourTxn from "../components/YourTxn";
-import { Pen } from "lucide-react";
 import Balance from "../components/Balance";
 
 const Dashboard = () => {

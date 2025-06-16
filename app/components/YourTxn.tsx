@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { ITransaction } from '@/models/Transaction';
 import { toast } from 'sonner';
-import { Delete, Trash2 } from 'lucide-react';
-import { set } from 'mongoose';
+import { Trash2 } from 'lucide-react';
 
 interface YourTxnProps {
     balance?: number | null;
