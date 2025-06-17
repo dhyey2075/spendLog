@@ -25,6 +25,13 @@ export async function DELETE(req: NextRequest) {
         }
         const user = await User.findOne({ clerkId: userId });
         user.balance = (user.balance || 0) - txn.amount; //because txn.amount is negative, this will effectively add the amount back to the user's balance
+        if(txn.to) {
+            const toUser = await User.findById(txn.to);
+            if (toUser) {
+                toUser.balance = (toUser.balance || 0) + txn.amount; // Add the amount back to the recipient's balance
+                await toUser.save();
+            }
+        }
         await user.save();
         return NextResponse.json({ message: "Transaction deleted successfully" }, { status: 200 });
     } catch (error) {

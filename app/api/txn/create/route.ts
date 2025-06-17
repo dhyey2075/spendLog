@@ -40,6 +40,12 @@ export async function POST(req: NextRequest) {
         })
         await newTxn.save();
 
+        const toUser = await User.findById(to);
+        if (toUser) {
+            toUser.balance = (toUser.balance || 0) - amount * (isExpense ? -1 : 1); // Add if income, deduct if expense
+            await toUser.save();
+        }
+
         user.balance = (user.balance || 0) - amount * (isExpense ? 1 : -1); // Deduct if expense, add if income
         await user.save();
 

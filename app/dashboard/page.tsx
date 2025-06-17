@@ -65,8 +65,8 @@ const Dashboard = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Welcome, {user?.firstName} {user?.lastName}
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Welcome, {user?.firstName} {(user?.lastName || "").slice(0, 9)}
                 </h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   Manage your transactions and track your activities

@@ -8,6 +8,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from 'sonner';
+import { Plus } from 'lucide-react';
 
 interface ISuggestedUser {
     _id: string;
@@ -47,7 +48,13 @@ const AddFriend = () => {
     return (
         <div>
             <Dialog>
-                <DialogTrigger>Add Friend</DialogTrigger>
+                <DialogTrigger>
+                    <div className='bg-blue-500 text-sm px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer'>
+                        <div className='flex items-center gap-2'>
+                            <span>Friend</span> <Plus size={15} />
+                        </div>
+                    </div>
+                </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Add a Friend</DialogTitle>
