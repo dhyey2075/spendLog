@@ -90,16 +90,7 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) 
                     {txn.description}
                   </h3>
                   <div className="mt-1 flex flex-wrap gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      {new Date(txn.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </span>
+                    
                     {txn.to && (
                       <span className="flex items-center">
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,9 +107,30 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) 
                         {txn.merchant}
                       </span>
                     )}
+                    {txn.category && (
+                      <span className="flex items-center">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m6-6V5a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V9m-6-6h6m-6 0H7" />
+                        </svg>
+                        {txn.category}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <div className="ml-4 flex items-center space-x-4">
+                <div className='flex flex-col items-start justify-between'>
+                  <div className='ml-4'>
+                    <span className="flex items-center">
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {new Date(txn.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="ml-4 flex items-center space-x-4">
                   <div className={`text-xl font-bold ${getTransactionStatusColor(txn.amount)}`}>
                     {txn.amount > 0 ? '+' : ''}{txn.amount} 
                     <span className="text-sm ml-1">{txn.method}</span>
@@ -151,6 +163,7 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) 
                       }
                     }} color='red' />
                   </div>
+                </div>
                 </div>
               </div>
             </div>

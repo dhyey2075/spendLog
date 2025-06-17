@@ -1,6 +1,7 @@
 import { dbConnect } from '@/lib/db';
 import User from '@/models/User';
 import { auth, clerkClient } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
@@ -21,7 +22,9 @@ export async function GET() {
             name: user.firstName + ' ' + user.lastName,
             });
         }
-        return new Response("User synced successfully", { status: 200 });
+        return NextResponse.json(
+            { message: "User synced successfully",  username: existing.username ? existing.username : null },
+            { status: 200 })
     } catch (error) {
         console.error("Error syncing user:", error);
         return new Response("Internal Server Error", { status: 500 });

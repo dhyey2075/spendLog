@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     try {
         let { userId } = await auth();
         const body = await req.json();
-        const { amount, description, method, category, to, merchant, userIdBody } = body;
+        const { amount, isExpense, description, method, category, to, merchant, userIdBody } = body;
         if (!userId && !userIdBody) return new Response("Unauthorized", { status: 401 });
 
         if (userIdBody) {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
             from: user._id,
             to: to || null,
             merchant: merchant || null,
-            amount: -amount,
+            amount: amount * (isExpense ? -1 : 1), 
             description: description || "No description provided",
             method,
             category: category || "Uncategorized",
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         })
         await newTxn.save();
 
-        user.balance = (user.balance || 0) - amount; 
+        user.balance = (user.balance || 0) - amount * (isExpense ? 1 : -1); // Deduct if expense, add if income
         await user.save();
 
         return NextResponse.json(

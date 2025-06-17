@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import TxnForm from "../components/TxnForm";
 import YourTxn from "../components/YourTxn";
 import Balance from "../components/Balance";
-import { Stars } from "lucide-react";
+import { Loader2, LoaderPinwheel, Stars } from "lucide-react";
 import { toast } from "sonner";
+import { set } from "mongoose";
+import SetUserName from "../components/SetUserName";
 
 const Dashboard = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -14,6 +16,8 @@ const Dashboard = () => {
   const [balance, setBalance] = React.useState<number | null>(null);
   const [message, setMessage] = React.useState<string>("");
   const [refresh, setRefresh] = React.useState<boolean>(false);
+  const [userName, setUserName] = React.useState<string>("");
+  const [loadingUserName, setLoadingUserName] = React.useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,13 +33,19 @@ const Dashboard = () => {
           if (res.status === 200) {
             console.log("User synced successfully");
           }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Test", data);
+          setUserName(data.username);
+          setLoadingUserName(false);
         })
         .catch((err) => {
           console.error("Error syncing user:", err.message);
         });
     }
    
-  }, [isSignedIn]);
+  }, [isSignedIn, refresh]);
 
   if (!isLoaded) {
     return (
@@ -73,7 +83,18 @@ const Dashboard = () => {
         </header>
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex justify-end mb-6">
+          <div className="flex justify-end mb-6 space-x-4">
+            {loadingUserName ? (<>
+              <Loader2 />
+            </>) : userName ? (
+              <div className="flex items-center p-2 rounded-sm space-x-4 bg-gradient-to-r from-blue-500 to-orange-500">
+                <span className="text-md font-bold text-gray-600 dark:text-gray-300">
+                  {userName || "Not set"}
+                </span>
+              </div>
+            ) : (
+              <SetUserName refresh={refresh} setRefresh={setRefresh} />
+            )}
             <button
               onClick={() => setCreateTxn(!createTxn)}
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"

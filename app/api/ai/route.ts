@@ -2,22 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
 const enhance_prompt = (prompt: string) => {
-    return `You are a helpful expense tracker. User gives you the transcribe and you are supposed to extract data fields from it. There are following data fields amount, description, method, merchant, catergory.
+    return `You are a helpful expense tracker. User gives you the transcribe and you are supposed to extract data fields from it. There are following data fields amount, isExpense, description, method, merchant, catergory.
 
 
     method: ["UPI", "Cash", "Credit", "Debit"]
     Categories: ['Food', 'Transport', 'Shopping', 'Entertainment', 'Bills', 'Health', 'Education', 'Salary', 'Investment', 'Gift', 'Travel', 'Groceries', 'Utilities', 'Subscriptions', 'Personal Care', 'Charity', 'Miscellaneous', 'Uncategorized', 'Other'
     ] otherwise you can return uncategorized.
+    merchant: ["Papa", "Mummy", "Friends", "Honey One", "Aashapura", "Padma Kamal", "Shinestar", "Kaka's Shop", "Nescafe", "Juice Shop", "KPP", "Amul", "Mess", "Pramukh", "RC", "Other"]
+
+    If the user is spending money, then isExpense should be true, otherwise false.
+    The Method and categories should be strictly from the above list.
 
 Example:
 I spent 100Rs on Padma Kamal for buying Samosas using UPI.
 Output: 
 {
     "amount": 100,
+    "isExpense": true,
     "description": "Samosas",
     "method": "UPI",
     "merchant: "Padma Kamal"
     "category": "Food"
+
 }
 
 Strictly follow the above format and do not return anything else. If you are not able to extract any field, just return null for that field.

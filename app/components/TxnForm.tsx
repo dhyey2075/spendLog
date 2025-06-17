@@ -9,6 +9,7 @@ interface TxnFormProps {
 const TxnForm: React.FC<TxnFormProps> = ({createTxn, setCreateTxn}) => {
     const [txn, setTxn] = React.useState({
         amount: '',
+        isExpense: true, 
         to: '',
         date: new Date().toISOString().split('T')[0], 
         category: '',
@@ -21,6 +22,9 @@ const TxnForm: React.FC<TxnFormProps> = ({createTxn, setCreateTxn}) => {
         'Food', 'Transport', 'Shopping', 'Entertainment', 'Bills', 'Health', 'Education', 'Salary', 'Investment', 'Gift', 'Travel', 'Groceries', 'Utilities', 'Subscriptions', 'Personal Care', 'Charity', 'Miscellaneous', 'Uncategorized', 'Other'
     ]
     const merchant = [
+        "Papa",
+        'Mummy',
+        "Friends",
         "Honey One",
         "Aashapura",
         "Padma Kamal",
@@ -32,7 +36,8 @@ const TxnForm: React.FC<TxnFormProps> = ({createTxn, setCreateTxn}) => {
         "Amul",
         "Mess",
         "Pramukh",
-        "RC"
+        "RC",
+        "Other"
     ]
   return (
     <div>
@@ -46,6 +51,19 @@ const TxnForm: React.FC<TxnFormProps> = ({createTxn, setCreateTxn}) => {
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required
                 />
+            </div>
+            <div className="mb-4">
+                <label className="block text-gray-700">Merchant</label>
+                <select
+                    value={txn.isExpense ? 'Expense' : 'Income'} 
+                    disabled={txn.to !== ''}
+                    onChange={(e) => setTxn({ ...txn, isExpense: e.target.value === 'Expense' })} 
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                >
+                    <option value="Expense">Expense</option>
+                    <option value="Income">Income</option>
+                    
+                </select>
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700">Merchant</label>
@@ -139,6 +157,7 @@ const TxnForm: React.FC<TxnFormProps> = ({createTxn, setCreateTxn}) => {
                         },
                         body: JSON.stringify({
                             amount: parseFloat(txn.amount),
+                            isExpense: txn.isExpense,
                             date: txn.date,
                             to: txn.to || null, 
                             merchant: txn.merchant || null,
@@ -166,6 +185,7 @@ const TxnForm: React.FC<TxnFormProps> = ({createTxn, setCreateTxn}) => {
                     setTxn(
                         {
                             amount: '',
+                            isExpense: true,
                             to: '',
                             merchant: '',
                             date: new Date().toISOString().split('T')[0], 

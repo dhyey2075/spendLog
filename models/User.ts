@@ -12,6 +12,7 @@ export interface IUser {
     _id: mongoose.Types.ObjectId;
     name: string;
     email: string;
+    username?: string; // Optional field for username
     balance: number;
     friends?: mongoose.Types.ObjectId[];
     groups?: mongoose.Types.ObjectId[];
@@ -26,6 +27,7 @@ const userSchema = new mongoose.Schema<IUser>({
     clerkId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    username: { type: String, unique: true, sparse: true }, 
     balance: { type: Number, default: 0 },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
