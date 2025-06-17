@@ -23,7 +23,7 @@ export async function GET() {
             });
         }
         return NextResponse.json(
-            { message: "User synced successfully",  username: existing.username ? existing.username : null },
+            { message: "User synced successfully",  username: existing?.username ? existing.username : null },
             { status: 200 })
     } catch (error) {
         console.error("Error syncing user:", error);

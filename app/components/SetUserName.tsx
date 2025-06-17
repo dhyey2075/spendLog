@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -16,6 +16,37 @@ interface SetUserNameProps {
 
 const SetUserName: React.FC<SetUserNameProps> = ({ refresh, setRefresh }) => {
     const [userName, setUserName] = React.useState<string>("");
+    const [userAvailable, setUserAvailable] = React.useState<boolean | null>(null);
+    const fetchIsUserAvailable = async (username: string): Promise<boolean> => {
+        setUserAvailable(null); // Reset availability status before checking
+        const response = await fetch(`/api/check-username?username=${username}`);
+        if (!response.ok) {
+            throw new Error("Failed to check username availability");
+        }
+        const data = await response.json();
+        return data.available;
+    }
+
+    useEffect(() => {
+        const i = setTimeout(async () => {
+            if (userName.length >= 3) {
+                try {
+                    const isAvailable = await fetchIsUserAvailable(userName);
+                    console.log(isAvailable, "userName");
+                    setUserAvailable(isAvailable);
+                } catch (error) {
+                    console.error("Error checking username availability:", error);
+                    setUserAvailable(null);
+                    // toast.error("Error checking username availability", {
+                    //     position: "top-right",
+                    //     style: { background: "#ef4444", color: "#fff" }
+                    // });
+                }
+            }
+        }, 1000);
+        return () => clearTimeout(i);
+    }, [userName]);
+
     const handleChangeUserName = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const response = await fetch("/api/setusername", {
@@ -43,7 +74,7 @@ const SetUserName: React.FC<SetUserNameProps> = ({ refresh, setRefresh }) => {
     return (
         <div>
             <Dialog>
-                <DialogTrigger>Open</DialogTrigger>
+                <DialogTrigger>Add Username</DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Set your username</DialogTitle>
@@ -65,8 +96,18 @@ const SetUserName: React.FC<SetUserNameProps> = ({ refresh, setRefresh }) => {
                             className="border rounded px-3 py-2 focus:outline-none focus:ring"
                             placeholder="Enter username"
                         />
+                        {
+                            userAvailable === null ? (
+                                <p className="text-gray-500 text-md">Checking availability...</p>
+                            ) : userAvailable ? (
+                                <p className="text-green-500 text-md">Username is available!</p>
+                            ) : (
+                                <p className="text-red-500 text-md">Username is already taken.</p>
+                            )
+                        }
                         <button
                             type="submit"
+                            disabled={!userAvailable || userName.length < 3}
                             className="bg-blue-600 text-white rounded px-4 py-2 mt-2 hover:bg-blue-700"
                         >
                             Save

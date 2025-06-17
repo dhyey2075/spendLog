@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import TxnForm from "../components/TxnForm";
 import YourTxn from "../components/YourTxn";
 import Balance from "../components/Balance";
-import { Loader2, LoaderPinwheel, Stars } from "lucide-react";
+import { Loader2, Stars } from "lucide-react";
 import { toast } from "sonner";
-import { set } from "mongoose";
 import SetUserName from "../components/SetUserName";
+import AddFriend from "../components/AddFriend";
 
 const Dashboard = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -84,12 +84,15 @@ const Dashboard = () => {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex justify-end mb-6 space-x-4">
+          <div>
+            <AddFriend />
+          </div>
             {loadingUserName ? (<>
               <Loader2 />
             </>) : userName ? (
               <div className="flex items-center p-2 rounded-sm space-x-4 bg-gradient-to-r from-blue-500 to-orange-500">
                 <span className="text-md font-bold text-gray-600 dark:text-gray-300">
-                  {userName || "Not set"}
+                  @{userName || "Not set"}
                 </span>
               </div>
             ) : (
@@ -133,7 +136,10 @@ const Dashboard = () => {
                   const data = await response.json();
                   if(response.status === 200) {
                     setMessage("");
-                    toast.success("Transaction created successfully by AI!");
+                    toast.success("Transaction created successfully by AI!", {
+                      position: "top-right",
+                      style: { background: "#22c55e", color: "#fff" }
+                    });
                     setRefresh(!refresh);
                   }
                   else {
@@ -148,9 +154,7 @@ const Dashboard = () => {
 
           {createTxn ? (
             <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <span className="i-lucide-pencil-line" /> New Transaction
-              </h2>
+              
               <TxnForm createTxn={createTxn} setCreateTxn={setCreateTxn} />
             </div>
           ) : (

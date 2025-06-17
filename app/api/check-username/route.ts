@@ -3,15 +3,16 @@ import { auth } from "@clerk/nextjs/server";
 import { dbConnect } from "@/lib/db";
 import User from "@/models/User";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    
     try {
-        const body = await req.json();
-        const { username } = body;
+        const { searchParams } = new URL(req.url);
+        const username = searchParams.get('username');
 
         if (!username || typeof username !== 'string' || username.length < 3) {
             return NextResponse.json({ available : false } , { status: 200 });
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ available: false }, { status: 200 });
         }
         return NextResponse.json({ available: true }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error checking username availability:", error);
         return NextResponse.json({ error: "Failed to check username availability" }, { status: 500 });
     }

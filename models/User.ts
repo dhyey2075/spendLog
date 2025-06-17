@@ -7,6 +7,12 @@ export interface IUserSettings {
     theme: "light" | "dark";
 }
 
+export interface IFriend {
+    _id: mongoose.Types.ObjectId;
+    username: string; 
+    friendSince: Date;
+}
+
 export interface IUser {
     clerkId: string;
     _id: mongoose.Types.ObjectId;
@@ -14,13 +20,18 @@ export interface IUser {
     email: string;
     username?: string; // Optional field for username
     balance: number;
-    friends?: mongoose.Types.ObjectId[];
+    friends?: IFriend[]; // Array of friends with additional info
     groups?: mongoose.Types.ObjectId[];
     settings?: IUserSettings;
     createdAt: Date;
     updatedAt: Date;
 }
 
+const friendSchema = new mongoose.Schema<IFriend>({
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    username: { type: String, required: true },
+    friendSince: { type: Date, default: Date.now },
+})
 
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -29,7 +40,7 @@ const userSchema = new mongoose.Schema<IUser>({
     email: { type: String, required: true, unique: true },
     username: { type: String, unique: true, sparse: true }, 
     balance: { type: Number, default: 0 },
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    friends: [friendSchema],
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     settings: {
         currency: { type: String, default: "INR" },

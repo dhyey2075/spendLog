@@ -22,12 +22,8 @@ export async function POST(req: NextRequest) {
         user.username = username;
         await user.save();
         return NextResponse.json({ message: "Username set successfully", username }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error setting username:", error);
-        // MongoDB duplicate key error code is 11000
-        if (error.code === 11000) {
-            return NextResponse.json({ error: "Username already exists." }, { status: 409 });
-        }
         return NextResponse.json({ error: "Failed to set username" }, { status: 500 });
     }
 }
