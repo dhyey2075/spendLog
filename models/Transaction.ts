@@ -4,6 +4,7 @@ export interface ITransaction {
     _id: mongoose.Types.ObjectId;
     to?: mongoose.Types.ObjectId;
     merchant?: string;
+    toUsername: string; // Optional field for username of the recipient
     from: mongoose.Types.ObjectId;
     amount: number;
     description: string;
