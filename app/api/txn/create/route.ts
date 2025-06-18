@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     try {
         let { userId } = await auth();
         const body = await req.json();
-        const { amount, isExpense, description, method, category, to, merchant, userIdBody } = body;
+        const { amount, isExpense, description, method, category, to, merchant, userIdBody, settled } = body;
         if (!userId && !userIdBody) return new Response("Unauthorized", { status: 401 });
 
         if (userIdBody) {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
 
         // Validate input
-        if (typeof amount !== "number" || typeof description !== "string") {
+        if (typeof amount !== "number") {
             return new Response("Invalid input", { status: 400 });
         }
 
@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
             description: description || "No description provided",
             method,
             category: category || "Uncategorized",
+            settled: settled ,
             createdAt: new Date(),
         })
         await newTxn.save();

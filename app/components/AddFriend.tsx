@@ -10,15 +10,12 @@ import {
 import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
 
-interface ISuggestedUser {
+export interface ISuggestedUser {
     _id: string;
     username: string;
 }
 
-const AddFriend = () => {
-    const [query, setQuery] = React.useState<string>("");
-    const [suggestions, setSuggestions] = React.useState<ISuggestedUser[]>([]);
-    const getSuggestions = async (query: string): Promise<ISuggestedUser[]> => {
+export const getSuggestions = async (query: string): Promise<ISuggestedUser[]> => {
         try {
             const response = await fetch(`/api/suggest-friends?query=${query}`);
             if (!response.ok) {
@@ -31,6 +28,11 @@ const AddFriend = () => {
             return [];
         }
     }
+
+const AddFriend = () => {
+    const [query, setQuery] = React.useState<string>("");
+    const [suggestions, setSuggestions] = React.useState<ISuggestedUser[]>([]);
+    
     useEffect(() => {
         const i = setTimeout(async () => {
             console.log("Here")

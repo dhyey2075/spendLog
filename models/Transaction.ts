@@ -1,11 +1,16 @@
 import mongoose from "mongoose";
 
+interface IFrom {
+    _id: mongoose.Types.ObjectId;
+    username: string; // Optional field for username of the sender
+}
+
 export interface ITransaction {
     _id: mongoose.Types.ObjectId;
     to?: mongoose.Types.ObjectId;
     merchant?: string;
     toUsername: string; // Optional field for username of the recipient
-    from: mongoose.Types.ObjectId;
+    from: mongoose.Types.ObjectId | IFrom; // Can be an ObjectId or an object with username
     amount: number;
     description: string;
     method: "Credit" | "Debit" | "UPI" | "Cash";
@@ -14,6 +19,7 @@ export interface ITransaction {
     splitType?: "Equal" | "Unequal";
     settled?: boolean;
     createdAt: Date;
+    fromUserName?: string; // Optional field for username of the sender
 }
 
 const transactionSchema = new mongoose.Schema<ITransaction>({
@@ -26,7 +32,7 @@ const transactionSchema = new mongoose.Schema<ITransaction>({
     category: { type: String, default: "Uncategorized" },
     splitBetween: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
     splitType: { type: String, enum: ["Equal", "Unequal"], default: "Equal" },
-    settled: { type: Boolean },
+    settled: { type: Boolean, default: true },
 }, {
     timestamps: true,
 });
