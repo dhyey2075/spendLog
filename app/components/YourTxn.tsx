@@ -91,6 +91,10 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) 
     return amount < 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400';
   };
 
+  useEffect(() => {
+    console.log(transactions, "transactions");
+  }, [transactions])
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-8">
@@ -210,7 +214,7 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) 
                   </div>
                 </div>
               </div>
-              ) : (
+              ) : !txn.settled && (
                 <div key={txn._id.toString()}>
                     <div className='flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200'>
                       <span>You owe {txn.fromUserName} {Math.abs(Number(txn.amount))} Rs</span>
@@ -223,7 +227,7 @@ const YourTxn: React.FC<YourTxnProps> = ({ setBalance, setCreateTxn, refresh }) 
                           if(response.status === 200) {
                             const data = await response.json();
                             setBalance(data.balance);
-                            setTransactions(transactions.map(t => t._id.toString() === txn._id.toString() ? { ...t, settled: true } : t));
+                            setTransactions(transactions.filter(t => t._id.toString() !== txn._id.toString()));
                             toast.success("Transaction settled successfully", {
                               position: "top-right",
                               style: { background: "#22c55e", color: "#fff" }

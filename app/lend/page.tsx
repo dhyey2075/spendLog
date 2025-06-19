@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from 'react'
 import { getSuggestions, ISuggestedUser } from '../components/AddFriend';
+import { toast } from 'sonner';
 
 const Lend = () => {
     const [amount, setAmount] = React.useState<number | null>(null);
@@ -29,6 +30,10 @@ const Lend = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Lend successful:", data);
+                toast.success(`Lent successful.`, {
+                    position: "top-right",
+                    style: { background: "#22c55e", color: "#fff" }
+                })
                 // Optionally, you can reset the form or show a success message
             } else {
                 console.error("Error lending money:", response.statusText);
