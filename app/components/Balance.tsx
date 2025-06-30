@@ -1,4 +1,4 @@
-import { Pen, Save } from 'lucide-react'
+import { Eye, EyeOff, Pen, Save } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner';
 
@@ -10,6 +10,7 @@ interface BalanceProps {
 const Balance: React.FC<BalanceProps> = ({ balance, setBalance }) => {
      const [editing, setEditing] = React.useState<boolean>(false);
      const [newBalance, setNewBalance] = React.useState<number | null>(balance);
+     const [showBalance, setShowBalance] = React.useState<boolean>(false);
     return (
         <div className="flex items-center space-x-2">
             <div>
@@ -23,7 +24,11 @@ const Balance: React.FC<BalanceProps> = ({ balance, setBalance }) => {
                         />
                     ) : (
                         <span className="text-xl font-bold">
-                            {balance !== null ? `₹${balance.toFixed(2)}` : '₹0.00'}
+                            { 
+                                showBalance 
+                                    ? (balance !== null ? `₹${balance.toFixed(2)}` : '₹0.00')
+                                    : '₹XXXX'
+                            }
                         </span>
                     )
                 }
@@ -49,9 +54,22 @@ const Balance: React.FC<BalanceProps> = ({ balance, setBalance }) => {
                             }
                         }} />
                     ) : (
-                        <Pen onClick={() => {
+                            <>
+                                <Pen onClick={() => {
                             setEditing(!editing);
                         }} />
+                            <div>
+                                {
+                                    showBalance ? (
+                                        <Eye onClick={() => setShowBalance(false)} className="cursor-pointer" />
+                                    ) : (
+                                        <EyeOff onClick={() => setShowBalance(true)} className="cursor-pointer" />
+                                    )
+                                }
+                            </div>
+                            </>
+                            
+                        
                     )
                 }
             </div>
